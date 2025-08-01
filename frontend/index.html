@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JPG → WEBP Конвертер</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPG → WEBP Конвертер</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>JPG → WEBP Конвертер</h1>
-    <form id="uploadForm">
-      <input type="file" id="fileInput" accept="image/jpeg" required />
-      <button type="submit">Загрузить JPG</button>
-    </form>
+    <div class="container">
+        <h1>Конвертер JPG → WEBP</h1>
 
-    <div id="preview"></div>
-    <div id="result"></div>
-  </div>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" accept=".jpg,.jpeg" required>
+            <button type="submit">Загрузить</button>
+        </form>
 
-  <script src="app.js"></script>
+        <div id="qualityOptions" class="quality-options"></div>
+
+        <pre id="scriptBox" class="script-box" style="display:none;"></pre>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
