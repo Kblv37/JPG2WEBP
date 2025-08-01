@@ -1,79 +1,111 @@
 body {
-  background: #f0f2f5;
-  font-family: "Segoe UI", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
   margin: 0;
-}
-
-.chat-container {
-  background: #fff;
-  width: 400px;
-  max-height: 90vh;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
   display: flex;
-  flex-direction: column;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-  overflow: hidden;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
 }
 
-.chat-box {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+.container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.7s ease;
 }
 
-.message {
-  margin: 10px 0;
-  padding: 12px 15px;
+h1 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.subtitle {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.upload-area {
+  margin-bottom: 25px;
+}
+
+button {
+  background: #0078ff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #005fcb;
+}
+
+#fileInfo {
+  margin-top: 10px;
+  color: #444;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+.quality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.quality-grid button {
+  background: #f3f6fa;
+  color: #333;
+  border: 2px solid #0078ff;
+  padding: 12px;
   border-radius: 12px;
-  max-width: 80%;
-  line-height: 1.4;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
-.bot {
-  background: #e7f1ff;
-  align-self: flex-start;
+.quality-grid button:hover {
+  background: #0078ff;
+  color: white;
 }
 
-.user {
-  background: #d1ffd6;
-  align-self: flex-end;
+#scriptSection {
+  margin-top: 30px;
 }
 
-.input-area {
-  display: flex;
-  border-top: 1px solid #ddd;
+#dateInput {
+  width: 70%;
   padding: 10px;
-  background: #fafafa;
-}
-
-.input-area input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
-  outline: none;
-}
-
-.input-area button {
-  background: #0078ff;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 20px;
-  margin-left: 8px;
-  cursor: pointer;
-}
-
-button.choice {
-  background: #0078ff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin: 5px;
   border-radius: 8px;
-  cursor: pointer;
+}
+
+pre {
+  text-align: left;
+  background: #f4f4f4;
+  padding: 15px;
+  border-radius: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
 }

@@ -7,15 +7,31 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="chat-container">
-    <div id="chatBox" class="chat-box"></div>
-    <div class="input-area">
-      <input type="text" id="userInput" placeholder="Напиши сюда..." disabled>
-      <button id="sendBtn" disabled>➤</button>
+  <div class="container">
+    <h1>JPG → WEBP Конвертер</h1>
+    <p class="subtitle">Загрузи JPG, выбери качество и скачай оптимизированный WEBP</p>
+
+    <div class="upload-area">
+      <input type="file" id="fileInput" accept=".jpg,.jpeg" hidden>
+      <button id="uploadBtn">Выбрать JPG</button>
+      <p id="fileInfo"></p>
     </div>
-    <input type="file" id="fileInput" accept=".jpg,.jpeg" hidden>
+
+    <div id="qualitySection" class="hidden">
+      <h2>Выберите качество:</h2>
+      <div id="qualityOptions" class="quality-grid"></div>
+    </div>
+
+    <div id="scriptSection" class="hidden">
+      <h2>Хотите добавить дату?</h2>
+      <input type="text" id="dateInput" placeholder="ДДММГГГГ или ДДММГГГГЧЧММ">
+      <button id="genScriptBtn">Сгенерировать скрипт</button>
+      <pre id="scriptBox"></pre>
+      <button id="copyBtn" class="hidden">Скопировать скрипт</button>
+    </div>
   </div>
 
+  <canvas id="canvas" style="display:none;"></canvas>
   <script src="app.js"></script>
 </body>
 </html>
