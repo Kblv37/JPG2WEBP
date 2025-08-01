@@ -22,7 +22,15 @@
         <button type="submit" class="btn-primary">Загрузить</button>
       </form>
 
+      <div id="fileInfo" class="file-info" style="display:none;"></div>
+
       <div id="qualityOptions" class="quality-options"></div>
+
+      <div id="detailsForm" class="details-form" style="display:none;">
+        <input type="text" id="newName" placeholder="Новое имя файла">
+        <input type="text" id="dateInput" placeholder="Дата (ДДММГГГГ или ДДММГГГГЧЧММ)">
+        <button id="copyBtn" class="btn-primary">Скопировать скрипт</button>
+      </div>
 
       <pre id="scriptBox" class="script-box" style="display:none;"></pre>
     </main>
