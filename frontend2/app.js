@@ -10,6 +10,7 @@ const dateInput = document.getElementById("dateInput");
 const genScriptBtn = document.getElementById("genScriptBtn");
 const scriptBox = document.getElementById("scriptBox");
 const copyBtn = document.getElementById("copyBtn");
+const loadingSection = document.getElementById("loadingSection");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -18,26 +19,27 @@ let originalName = "";
 let originalSize = 0;
 let resolution = "";
 let selectedFileName = "";
-let selectedQuality = 0;
 let selectedBlob = null;
 
-const QUALITIES = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2];
+const QUALITIES = [100, 90, 80, 70, 60, 50, 40, 30, 20];
 
 uploadBtn.onclick = () => fileInput.click();
 
-fileInput.addEventListener("change", (e) => {
+fileInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file || !file.type.includes("jpeg")) {
     fileInfo.textContent = "Выберите JPG-файл.";
     return;
   }
+
   originalFile = file;
   originalName = file.name;
   originalSize = (file.size / 1024 / 1024).toFixed(2);
 
   const img = new Image();
   img.src = URL.createObjectURL(file);
-  img.onload = () => {
+
+  img.onload = async () => {
     resolution = `${img.width}x${img.height}`;
     fileInfo.textContent = `Файл: ${originalName} (${originalSize} MB, ${resolution})`;
 
@@ -46,27 +48,35 @@ fileInput.addEventListener("change", (e) => {
     ctx.drawImage(img, 0, 0);
 
     qualityOptions.innerHTML = "";
-    qualitySection.classList.remove("hidden");
+    qualitySection.classList.add("hidden");
     downloadSection.classList.add("hidden");
     scriptSection.classList.add("hidden");
+    loadingSection.classList.remove("hidden");
 
-    // Рисуем кнопки строго в порядке 100 → 20
-    QUALITIES.forEach(q => {
-      canvas.toBlob((blob) => {
-        const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
-        const btn = document.createElement("button");
-        btn.textContent = `${Math.round(q*100)}% (${sizeMB} MB)`;
-        btn.onclick = () => {
-          document.querySelectorAll(".quality-grid button").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          selectedQuality = q;
-          selectedBlob = blob;
-          selectedFileName = `${originalName.split(".")[0]}_${Math.round(q*100)}.webp`;
-          downloadSection.classList.remove("hidden");
-        };
-        qualityOptions.appendChild(btn);
-      }, "image/webp", q);
+    const results = [];
+
+    for (let q of QUALITIES) {
+      const blob = await new Promise(resolve => canvas.toBlob(b => resolve(b), "image/webp", q/100));
+      const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
+      results.push({ quality: q, blob, sizeMB });
+    }
+
+    qualityOptions.innerHTML = "";
+    results.forEach(({ quality, blob, sizeMB }) => {
+      const btn = document.createElement("button");
+      btn.textContent = `${quality}% — ${sizeMB} MB — ${resolution}`;
+      btn.onclick = () => {
+        document.querySelectorAll(".quality-list button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedBlob = blob;
+        selectedFileName = `${originalName.split(".")[0]}_${quality}.webp`;
+        downloadSection.classList.remove("hidden");
+      };
+      qualityOptions.appendChild(btn);
     });
+
+    loadingSection.classList.add("hidden");
+    qualitySection.classList.remove("hidden");
   };
 });
 
@@ -105,7 +115,7 @@ genScriptBtn.onclick = () => {
 
 copyBtn.onclick = () => {
   navigator.clipboard.writeText(scriptBox.textContent).then(() => {
-    copyBtn.textContent = "Скопировано!";
-    setTimeout(() => copyBtn.textContent = "Скопировать скрипт", 2000);
+    copyBtn.textContent = "✅ Скопировано!";
+    setTimeout(() => copyBtn.textContent = "📋 Скопировать скрипт", 2000);
   });
 };

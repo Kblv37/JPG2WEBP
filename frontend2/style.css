@@ -1,113 +1,106 @@
 body {
   margin: 0;
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #74ABE2, #5563DE);
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(120deg, #6a11cb, #2575fc);
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
   padding: 20px;
-  color: #333;
+  color: #fff;
 }
 
 .container {
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+  color: #222;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
   padding: 25px;
-  max-width: 600px;
+  max-width: 650px;
   width: 100%;
   text-align: center;
   animation: fadeIn 0.6s ease;
 }
 
 h1 {
-  margin-bottom: 5px;
-  font-size: 24px;
-  color: #222;
+  margin-bottom: 10px;
+  font-size: 26px;
 }
 
 .subtitle {
-  margin-bottom: 20px;
   color: #666;
-  font-size: 14px;
+  margin-bottom: 20px;
 }
 
-.upload-area {
+.upload-card {
   margin-bottom: 25px;
 }
 
 button {
-  background: #5563DE;
+  background: #2575fc;
   color: white;
   border: none;
   padding: 12px 20px;
-  font-size: 15px;
-  border-radius: 10px;
+  font-size: 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background: #4050c0;
+  background: #1b5edc;
 }
 
 #fileInfo {
   margin-top: 10px;
-  color: #444;
   font-size: 14px;
-  word-break: break-word;
+  color: #444;
 }
 
 .hidden {
   display: none;
 }
 
-.quality-grid {
+.quality-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 12px;
-  justify-content: center;
+  margin-top: 20px;
 }
 
-.quality-grid button {
-  flex: 1 1 100px;
-  background: #f5f7ff;
-  color: #333;
-  border: 2px solid #5563DE;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: 0.2s;
+.quality-list button {
+  background: #f4f7ff;
+  border: 2px solid #2575fc;
+  color: #222;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  text-align: left;
+  transition: 0.3s;
 }
 
-.quality-grid button:hover {
-  background: #5563DE;
-  color: white;
+.quality-list button:hover {
+  background: #2575fc;
+  color: #fff;
 }
 
-.quality-grid button.active {
-  background: #5563DE;
-  color: white;
-}
-
-#scriptSection {
-  margin-top: 25px;
+.quality-list button.active {
+  background: #2575fc;
+  color: #fff;
 }
 
 #dateInput {
   width: 90%;
   max-width: 400px;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 14px;
 }
 
 pre {
   text-align: left;
-  background: #f4f4f4;
+  background: #f8f8f8;
   padding: 15px;
   border-radius: 12px;
   max-height: 200px;
@@ -116,19 +109,34 @@ pre {
   margin-bottom: 10px;
 }
 
+.skeleton {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(90deg, #eee, #ddd, #eee);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 20px;
   }
   h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
-  .quality-grid {
-    flex-direction: column;
+  .quality-list button {
+    font-size: 14px;
+    padding: 12px;
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
+  from { opacity: 0; transform: translateY(15px);}
   to { opacity: 1; transform: translateY(0);}
 }
