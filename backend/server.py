@@ -1,19 +1,21 @@
 from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from PIL import Image
 import io
 from datetime import datetime
 
 app = Flask(__name__)
 
-# Разрешаем доступ с Netlify
+# Разрешаем только твоему Netlify-домену
 CORS(app, resources={r"/*": {"origins": "https://photos-port-dev.netlify.app"}})
 
 @app.route("/")
+@cross_origin()
 def home():
-    return "Сервер JPG→WEBP работает 🚀"
+    return "✅ Сервер JPG→WEBP работает и доступен для фронтенда!"
 
 @app.route("/analyze", methods=["POST"])
+@cross_origin()
 def analyze():
     file = request.files.get("file")
     if not file:
@@ -36,6 +38,7 @@ def analyze():
     return jsonify({"qualities": results})
 
 @app.route("/convert", methods=["POST"])
+@cross_origin()
 def convert():
     file = request.files.get("file")
     quality = int(request.form.get("quality", 80))
@@ -53,7 +56,6 @@ def convert():
     width, height = img.size
     size_mb = round(len(buf.getvalue()) / 1024 / 1024, 2)
 
-    # Дата
     try:
         if date_str and len(date_str) == 8:
             dt = datetime.strptime(date_str, "%d%m%Y")
