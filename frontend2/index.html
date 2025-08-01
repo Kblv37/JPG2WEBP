@@ -7,32 +7,27 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>📷 JPG → WEBP Конвертер</h1>
-      <p>Загрузи JPG → выбери качество → скачай</p>
-    </header>
+  <div class="container">
+    <h1>Конвертер JPG → WEBP</h1>
 
-    <main>
-      <form id="uploadForm">
-        <label class="file-upload" id="fileLabel">
-          <input type="file" id="fileInput" accept=".jpg,.jpeg" required>
-          <span>📂 Выбери JPG файл</span>
-        </label>
-      </form>
+    <label class="file-label">
+      <input type="file" id="fileInput" accept=".jpg,.jpeg" hidden>
+      <span id="fileName">Выбрать JPG файл</span>
+    </label>
 
-      <div id="skeleton" class="skeleton" style="display:none;"></div>
+    <div id="skeleton" class="skeleton hidden"></div>
+    <div id="qualityOptions" class="quality-options"></div>
 
-      <div id="qualityOptions" class="quality-options"></div>
+    <div id="scriptBoxWrapper" class="hidden">
+      <button id="copyBtn" class="btn">📋 Копировать скрипт</button>
+      <pre id="scriptBox" class="script-box"></pre>
+    </div>
 
-      <div id="detailsForm" class="details-form" style="display:none;">
-        <input type="text" id="newName" placeholder="Новое имя файла">
-        <input type="text" id="dateInput" placeholder="Дата (ДДММГГГГ или ДДММГГГГЧЧММ)">
-        <button id="downloadBtn" class="btn-primary">Скачать</button>
-      </div>
-
-      <pre id="scriptBox" class="script-box" style="display:none;"></pre>
-    </main>
+    <div id="detailsForm" class="hidden">
+      <input type="text" id="newName" placeholder="Новое имя файла">
+      <input type="text" id="dateInput" placeholder="Дата (ДДММГГГГ или ДДММГГГГЧЧММ)">
+      <button id="downloadBtn" class="btn">⬇️ Скачать</button>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>
