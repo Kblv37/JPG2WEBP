@@ -16,6 +16,14 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   const img = new Image();
   img.src = URL.createObjectURL(uploadedFile);
 
+  const qualityDiv = document.getElementById("qualityOptions");
+  qualityDiv.innerHTML = "";
+  QUALITIES.forEach(() => {
+    const skel = document.createElement("div");
+    skel.className = "skeleton";
+    qualityDiv.appendChild(skel);
+  });
+
   img.onload = async () => {
     originalInfo = {
       name: uploadedFile.name,
@@ -49,20 +57,32 @@ async function analyzeFile(img) {
     });
   }
 
-  renderQualityButtons();
+  renderQualityCards();
 }
 
-function renderQualityButtons() {
+function renderQualityCards() {
   const qualityDiv = document.getElementById("qualityOptions");
   qualityDiv.innerHTML = "";
 
   variants.sort((a, b) => b.quality - a.quality);
 
   variants.forEach(v => {
+    const card = document.createElement("div");
+    card.className = "quality-card";
+
+    card.innerHTML = `
+      <h3>${v.quality}% качество</h3>
+      <p>Размер: ${v.size} MB</p>
+      <p>Разрешение: ${v.resolution}</p>
+    `;
+
     const btn = document.createElement("button");
-    btn.textContent = `${v.quality}% — ${v.size} MB — ${v.resolution}`;
+    btn.className = "download-btn";
+    btn.textContent = "⬇ Скачать";
     btn.addEventListener("click", () => downloadVariant(v));
-    qualityDiv.appendChild(btn);
+
+    card.appendChild(btn);
+    qualityDiv.appendChild(card);
   });
 }
 
