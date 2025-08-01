@@ -1,142 +1,158 @@
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  background: linear-gradient(120deg, #6a11cb, #2575fc);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 20px;
-  color: #fff;
+:root {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --text: #1f2937;
+  --subtext: #6b7280;
+  --radius: 16px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-  background: #fff;
-  color: #222;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  padding: 25px;
-  max-width: 650px;
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: var(--bg);
+  margin: 0;
+  color: var(--text);
+}
+
+.app {
+  max-width: 600px;
+  margin: auto;
+  padding: 1rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  margin: 0.5rem 0;
+  font-size: 1.8rem;
+}
+
+header p {
+  color: var(--subtext);
+  font-size: 1rem;
+}
+
+form {
+  background: var(--card);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.file-upload {
+  background: #f3f4f6;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
   width: 100%;
   text-align: center;
-  animation: fadeIn 0.6s ease;
+  border: 2px dashed #d1d5db;
+  transition: 0.3s;
 }
 
-h1 {
-  margin-bottom: 10px;
-  font-size: 26px;
+.file-upload:hover {
+  background: #e5e7eb;
 }
 
-.subtitle {
-  color: #666;
-  margin-bottom: 20px;
+.file-upload input {
+  display: none;
 }
 
-.upload-card {
-  margin-bottom: 25px;
-}
-
-button {
-  background: #2575fc;
+.btn-primary {
+  background: var(--accent);
   color: white;
   border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: background 0.3s;
 }
 
-button:hover {
-  background: #1b5edc;
+.btn-primary:hover {
+  background: var(--accent-hover);
 }
 
-#fileInfo {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #444;
+.quality-options {
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.8rem;
 }
 
-.hidden {
-  display: none;
-}
-
-.quality-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.quality-list button {
-  background: #f4f7ff;
-  border: 2px solid #2575fc;
-  color: #222;
-  padding: 14px;
-  border-radius: 10px;
-  font-size: 15px;
-  text-align: left;
-  transition: 0.3s;
-}
-
-.quality-list button:hover {
-  background: #2575fc;
-  color: #fff;
-}
-
-.quality-list button.active {
-  background: #2575fc;
-  color: #fff;
-}
-
-#dateInput {
-  width: 90%;
-  max-width: 400px;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-pre {
-  text-align: left;
-  background: #f8f8f8;
-  padding: 15px;
-  border-radius: 12px;
-  max-height: 200px;
-  overflow-y: auto;
-  font-size: 13px;
-  margin-bottom: 10px;
-}
-
-.skeleton {
+.quality-options button {
   width: 100%;
-  height: 50px;
-  background: linear-gradient(90deg, #eee, #ddd, #eee);
+  background: var(--card);
+  border: 1px solid #e5e7eb;
+  padding: 0.9rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.quality-options button:hover {
+  transform: scale(1.02);
+  background: #f3f4f6;
+}
+
+.script-box {
+  margin-top: 2rem;
+  background: #111827;
+  color: #d1d5db;
+  padding: 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--subtext);
+  font-size: 0.9rem;
+}
+
+/* 📌 Скелетон-загрузчик */
+.skeleton {
+  height: 48px;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
   background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: var(--radius);
+  animation: skeleton-loading 1.5s infinite;
 }
 
-@keyframes loading {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
+/* 📌 Мобильная адаптация */
 @media (max-width: 600px) {
-  .container {
-    padding: 20px;
+  .app {
+    padding: 0.5rem;
   }
-  h1 {
-    font-size: 22px;
-  }
-  .quality-list button {
-    font-size: 14px;
-    padding: 12px;
-  }
-}
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px);}
-  to { opacity: 1; transform: translateY(0);}
+  header h1 {
+    font-size: 1.4rem;
+  }
+
+  form {
+    padding: 1rem;
+  }
+
+  .quality-options button {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
 }
