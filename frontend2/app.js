@@ -1,6 +1,3 @@
-<script type="module">
-import { ImagePool } from "https://cdn.jsdelivr.net/npm/@squoosh/lib@0.4.0/dist/index.min.js";
-
 const QUALITIES = [100, 90, 80, 70, 60, 50, 40, 30, 20];
 let uploadedFile = null;
 let originalInfo = {};
@@ -16,50 +13,41 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   }
 
   uploadedFile = fileInput.files[0];
-  const qualityOptions = document.getElementById("qualityOptions");
-  qualityOptions.innerHTML = "";
+  const img = new Image();
+  img.src = URL.createObjectURL(uploadedFile);
 
-  // Скелетон на время обработки
-  for (let i = 0; i < QUALITIES.length; i++) {
-    const skel = document.createElement("div");
-    skel.className = "skeleton";
-    qualityOptions.appendChild(skel);
-  }
+  img.onload = async () => {
+    originalInfo = {
+      name: uploadedFile.name,
+      size: (uploadedFile.size / 1024 / 1024).toFixed(2) + " MB",
+      resolution: `${img.width}x${img.height}`
+    };
 
-  await analyzeFile(uploadedFile);
+    await analyzeFile(img);
+  };
 });
 
-async function analyzeFile(file) {
-  const imagePool = new ImagePool(navigator.hardwareConcurrency);
-  const arrayBuffer = await file.arrayBuffer();
-  const image = imagePool.ingestImage(arrayBuffer);
-
-  // Получаем разрешение
-  const bitmap = await createImageBitmap(file);
-  originalInfo = {
-    name: file.name,
-    size: (file.size / 1024 / 1024).toFixed(2) + " MB",
-    resolution: `${bitmap.width}x${bitmap.height}`
-  };
-
+async function analyzeFile(img) {
   variants = [];
 
   for (let q of QUALITIES) {
-    await image.encode({
-      webp: { quality: q }
-    });
-    const encoded = await image.encodedWith.webp;
-    const blob = new Blob([encoded.binary], { type: "image/webp" });
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    const blob = await new Promise((res) =>
+      canvas.toBlob(res, "image/webp", q / 100)
+    );
 
     variants.push({
       quality: q,
       blob,
       size: (blob.size / 1024 / 1024).toFixed(2),
-      resolution: `${bitmap.width}x${bitmap.height}`
+      resolution: `${img.width}x${img.height}`
     });
   }
-
-  await imagePool.close();
 
   renderQualityButtons();
 }
@@ -123,4 +111,3 @@ async function downloadVariant(variant) {
   scriptBox.textContent = script;
   scriptBox.style.display = "block";
 }
-</script>
