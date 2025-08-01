@@ -6,6 +6,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "Сервер JPG→WEBP работает 🚀"
+
 @app.route("/analyze", methods=["POST"])
 def analyze():
     file = request.files.get("file")
