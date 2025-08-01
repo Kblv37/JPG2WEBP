@@ -6,9 +6,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Разрешаем запросы с любых доменов (для теста)
-# Для продакшена лучше указать свой Netlify-домен
-CORS(app, resources={r"/*": {"origins": "*"}})
+# Разрешаем доступ с Netlify
+CORS(app, resources={r"/*": {"origins": "https://photos-port-dev.netlify.app"}})
 
 @app.route("/")
 def home():
@@ -54,20 +53,17 @@ def convert():
     width, height = img.size
     size_mb = round(len(buf.getvalue()) / 1024 / 1024, 2)
 
-    # Обработка даты
-    if date_str:
-        try:
-            if len(date_str) == 8:
-                dt = datetime.strptime(date_str, "%d%m%Y")
-                dt_str = dt.strftime("%Y-%m-%d")
-            elif len(date_str) == 12:
-                dt = datetime.strptime(date_str, "%d%m%Y%H%M")
-                dt_str = dt.strftime("%Y-%m-%dT%H:%M")
-            else:
-                raise ValueError
-        except ValueError:
+    # Дата
+    try:
+        if date_str and len(date_str) == 8:
+            dt = datetime.strptime(date_str, "%d%m%Y")
+            dt_str = dt.strftime("%Y-%m-%d")
+        elif date_str and len(date_str) == 12:
+            dt = datetime.strptime(date_str, "%d%m%Y%H%M")
+            dt_str = dt.strftime("%Y-%m-%dT%H:%M")
+        else:
             dt_str = datetime.now().strftime("%Y-%m-%dT%H:%M")
-    else:
+    except ValueError:
         dt_str = datetime.now().strftime("%Y-%m-%dT%H:%M")
 
     script = f""",\n{{ url: '{new_name}.webp', original: {{ name: '{file.filename}', size: '{size_mb} MB', resolution: '{width}x{height}' }}, uploadTime: new Date('{dt_str}') }}"""
