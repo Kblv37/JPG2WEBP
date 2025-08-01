@@ -8,26 +8,26 @@
 </head>
 <body>
   <div class="container">
-    <h1>Конвертер JPG → WEBP</h1>
+    <h1>JPG → WEBP Конвертер</h1>
 
     <label class="file-label">
       <input type="file" id="fileInput" accept=".jpg,.jpeg" hidden>
       <span id="fileName">Выбрать JPG файл</span>
     </label>
 
+    <div id="fileInfo" class="file-info hidden"></div>
+
     <div id="skeleton" class="skeleton hidden"></div>
     <div id="qualityOptions" class="quality-options"></div>
 
-    <div id="scriptBoxWrapper" class="hidden">
-      <button id="copyBtn" class="btn">📋 Копировать скрипт</button>
-      <pre id="scriptBox" class="script-box"></pre>
-    </div>
+    <pre id="scriptBox" class="script-box hidden"></pre>
 
     <div id="detailsForm" class="hidden">
-      <input type="text" id="newName" placeholder="Новое имя файла">
+      <input type="text" id="newName" placeholder="Новое имя файла (+small или small+)">
       <input type="text" id="dateInput" placeholder="Дата (ДДММГГГГ или ДДММГГГГЧЧММ)">
-      <button id="downloadBtn" class="btn">⬇️ Скачать</button>
     </div>
+
+    <button id="downloadCopyBtn" class="btn hidden wide-btn">Скачать / Скопировать</button>
   </div>
   <script src="app.js"></script>
 </body>
