@@ -1,54 +1,83 @@
-const backendURL = "https://jpg2webp.onrender.com";
+const backendUrl = "https://jpg2webp.onrender.com"; // URL твоего сервера на Render
 
 document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const file = document.getElementById("fileInput").files[0];
-  const formData = new FormData();
-  formData.append("file", file);
+    e.preventDefault();
 
-  document.getElementById("preview").innerHTML = "<p>⏳ Загружаю...</p>";
-
-  try {
-    const res = await fetch(`${backendURL}/preview`, { method: "POST", body: formData });
-    const data = await res.json();
-
-    if (data.error) {
-      document.getElementById("preview").innerText = "Ошибка: " + data.error;
-      return;
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput.files.length) {
+        alert("Выбери JPG файл!");
+        return;
     }
 
-    let html = `<p>Разрешение: ${data.width}×${data.height}</p><p>Выберите качество:</p>`;
-    html += "<div>";
-    data.options.forEach(opt => {
-      html += `<button onclick="convert(${opt.quality})">${opt.quality}% (${opt.size} MB)</button> `;
-    });
-    html += "</div>";
-    document.getElementById("preview").innerHTML = html;
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
 
-    window._selectedFile = file;
+    try {
+        // Шаг 1: анализируем файл
+        const analyzeRes = await fetch(`${backendUrl}/analyze`, {
+            method: "POST",
+            body: formData
+        });
 
-  } catch (err) {
-    document.getElementById("preview").innerText = "Ошибка сервера";
-  }
+        if (!analyzeRes.ok) throw new Error("Ошибка анализа файла");
+
+        const data = await analyzeRes.json();
+        const qualityDiv = document.getElementById("qualityOptions");
+        qualityDiv.innerHTML = "";
+
+        data.qualities.forEach(q => {
+            const btn = document.createElement("button");
+            btn.textContent = `${q.quality}% (${q.size_mb} MB, ${q.resolution})`;
+            btn.addEventListener("click", () => convertFile(file, q.quality));
+            qualityDiv.appendChild(btn);
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Ошибка: не удалось подключиться к серверу.");
+    }
 });
 
-async function convert(quality) {
-  const formData = new FormData();
-  formData.append("file", window._selectedFile);
-  formData.append("quality", quality);
+async function convertFile(file, quality) {
+    const newName = prompt("Введите имя файла (без расширения)", "converted") || "converted";
 
-  document.getElementById("result").innerHTML = "<p>⏳ Конвертирую...</p>";
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("quality", quality);
+    formData.append("new_name", newName);
+    formData.append("date", prompt("Введите дату (ДДММГГГГ или ДДММГГГГЧЧММ)", ""));
 
-  try {
-    const res = await fetch(`${backendURL}/convert`, { method: "POST", body: formData });
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
+    try {
+        const res = await fetch(`${backendUrl}/convert`, {
+            method: "POST",
+            body: formData
+        });
 
-    document.getElementById("result").innerHTML = `
-      <p>✅ Конвертация завершена!</p>
-      <a href="${url}" download="converted.webp">Скачать WEBP (${quality}%)</a>
-    `;
-  } catch (err) {
-    document.getElementById("result").innerText = "Ошибка при конвертации";
-  }
+        if (!res.ok) throw new Error("Ошибка конвертации");
+
+        // Получаем blob файла
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Создаем ссылку для скачивания
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${newName}.webp`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        // Забираем скрипт из заголовка
+        const script = res.headers.get("X-Script");
+        if (script) {
+            const scriptBox = document.getElementById("scriptBox");
+            scriptBox.textContent = script;
+            scriptBox.style.display = "block";
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Ошибка: не удалось выполнить конвертацию.");
+    }
 }
