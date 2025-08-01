@@ -3,11 +3,18 @@ from flask_cors import CORS, cross_origin
 from PIL import Image
 import io
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 # Разрешаем только твоему Netlify-домену
-CORS(app, resources={r"/*": {"origins": "https://photos-port-dev.netlify.app"}})
+CORS(app, resources={r"/*": {"origins": "https://photos-port-dev.netlify.app"}}, supports_credentials=True)
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 @app.route("/")
 @cross_origin()
@@ -78,5 +85,10 @@ def convert():
         headers={"X-Script": script}
     )
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+
+
