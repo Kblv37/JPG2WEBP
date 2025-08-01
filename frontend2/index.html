@@ -8,8 +8,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>JPG → WEBP Конвертер</h1>
-    <p class="subtitle">Загрузи JPG, выбери качество и скачай оптимизированный WEBP</p>
+    <h1>Конвертер JPG → WEBP</h1>
+    <p class="subtitle">Быстрая и качественная конвертация прямо в браузере</p>
 
     <div class="upload-area">
       <input type="file" id="fileInput" accept=".jpg,.jpeg" hidden>
@@ -22,8 +22,12 @@
       <div id="qualityOptions" class="quality-grid"></div>
     </div>
 
+    <div id="downloadSection" class="hidden">
+      <button id="downloadBtn">Скачать выбранный файл</button>
+    </div>
+
     <div id="scriptSection" class="hidden">
-      <h2>Хотите добавить дату?</h2>
+      <h2>Добавить дату для скрипта?</h2>
       <input type="text" id="dateInput" placeholder="ДДММГГГГ или ДДММГГГГЧЧММ">
       <button id="genScriptBtn">Сгенерировать скрипт</button>
       <pre id="scriptBox"></pre>

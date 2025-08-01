@@ -3,6 +3,8 @@ const uploadBtn = document.getElementById("uploadBtn");
 const fileInfo = document.getElementById("fileInfo");
 const qualitySection = document.getElementById("qualitySection");
 const qualityOptions = document.getElementById("qualityOptions");
+const downloadSection = document.getElementById("downloadSection");
+const downloadBtn = document.getElementById("downloadBtn");
 const scriptSection = document.getElementById("scriptSection");
 const dateInput = document.getElementById("dateInput");
 const genScriptBtn = document.getElementById("genScriptBtn");
@@ -16,7 +18,6 @@ let originalName = "";
 let originalSize = 0;
 let resolution = "";
 let selectedFileName = "";
-let selectedFormat = "webp";
 let selectedQuality = 0;
 let selectedBlob = null;
 
@@ -46,29 +47,37 @@ fileInput.addEventListener("change", (e) => {
 
     qualityOptions.innerHTML = "";
     qualitySection.classList.remove("hidden");
+    downloadSection.classList.add("hidden");
+    scriptSection.classList.add("hidden");
 
+    // Рисуем кнопки строго в порядке 100 → 20
     QUALITIES.forEach(q => {
       canvas.toBlob((blob) => {
         const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
         const btn = document.createElement("button");
         btn.textContent = `${Math.round(q*100)}% (${sizeMB} MB)`;
         btn.onclick = () => {
+          document.querySelectorAll(".quality-grid button").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
           selectedQuality = q;
           selectedBlob = blob;
           selectedFileName = `${originalName.split(".")[0]}_${Math.round(q*100)}.webp`;
-
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = selectedFileName;
-          link.click();
-
-          scriptSection.classList.remove("hidden");
+          downloadSection.classList.remove("hidden");
         };
         qualityOptions.appendChild(btn);
       }, "image/webp", q);
     });
   };
 });
+
+downloadBtn.onclick = () => {
+  if (!selectedBlob) return;
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(selectedBlob);
+  link.download = selectedFileName;
+  link.click();
+  scriptSection.classList.remove("hidden");
+};
 
 genScriptBtn.onclick = () => {
   let dtStr = new Date().toISOString();
