@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>JPG → WEBP Конвертер</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 30px; background: #f8f8f8; }
+    .quality-btn { margin: 5px; padding: 10px; }
+    textarea { width: 80%; height: 100px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Конвертер JPG → WEBP</h1>
+  <input type="file" id="fileInput" accept=".jpg,.jpeg" /><br>
+  <button onclick="analyze()">Показать качества</button>
+  <p id="status"></p>
+  <div id="qualityOptions"></div>
+  <input type="text" id="newName" placeholder="Новое имя (без .webp)"><br>
+  <input type="text" id="dateInput" placeholder="ДДММГГГГ или ДДММГГГГЧЧММ"><br>
+  <a id="downloadLink" style="display:none;">Скачать WEBP</a>
+  <textarea id="scriptBox" readonly style="display:none;"></textarea>
+
+  <script>
+    let file;
+
+    async function analyze() {
+      file = document.getElementById("fileInput").files[0];
+      if (!file) { alert("Выберите JPG!"); return; }
+
+      document.getElementById("status").textContent = "Анализ...";
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("https://your-render-service.onrender.com/analyze", {
+        method: "POST", body: formData
+      });
+      const data = await res.json();
+
+      let html = "<h3>Выбери качество:</h3>";
+      data.qualities.forEach(q => {
+        html += `<button class="quality-btn" onclick="convert(${q.quality})">${q.quality}% (${q.size_mb} MB, ${q.resolution})</button>`;
+      });
+      document.getElementById("qualityOptions").innerHTML = html;
+      document.getElementById("status").textContent = "Выбери качество";
+    }
+
+    async function convert(quality) {
+      const newName = document.getElementById("newName").value || "converted";
+      const dateVal = document.getElementById("dateInput").value;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("quality", quality);
+      formData.append("new_name", newName);
+      formData.append("date", dateVal);
+
+      document.getElementById("status").textContent = "Конвертация...";
+      const res = await fetch("https://your-render-service.onrender.com/convert", { method: "POST", body: formData });
+
+      if (!res.ok) { alert("Ошибка конвертации!"); return; }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+
+      const downloadLink = document.getElementById("downloadLink");
+      downloadLink.href = url;
+      downloadLink.download = `${newName}.webp`;
+      downloadLink.style.display = "block";
+      downloadLink.textContent = `Скачать (${quality}%)`;
+
+      const script = res.headers.get("X-Script");
+      if (script) {
+        const scriptBox = document.getElementById("scriptBox");
+        scriptBox.style.display = "block";
+        scriptBox.value = script;
+      }
+
+      document.getElementById("status").textContent = "Готово ✅";
+    }
+  </script>
+</body>
+</html>
